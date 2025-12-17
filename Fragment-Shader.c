@@ -409,7 +409,7 @@ void main() {
                 vec2 boxUV = getBoxUV(current_pos,voxelPositions[i],vec3(1,1,1)).xy;
                 light_color = vec3(boxUV,0.0);
                 b = b*0.1;
-                b = 1;
+                b = 0;
 
                 //getBoxNormal(current_pos,voxelPositions);
 

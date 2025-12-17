@@ -469,7 +469,7 @@ def main(FRAGMENT_SHADER=""):
 
 
 
-    voxel_data = np.array([[0,0,0]],dtype = np.float32)
+    voxel_data = np.array([[0,0-2.5,0]],dtype = np.float32)
     voxel_count = len(voxel_data)
     
     camera_pos = np.array([0.0, 0.0, 0.0], dtype=np.float32)
