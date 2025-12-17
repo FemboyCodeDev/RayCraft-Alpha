@@ -502,6 +502,7 @@ def main(FRAGMENT_SHADER=""):
     triangleVertex2 = []
     triangleVertex3 = []
     for triangle in objModelData["faces"]:
+        break
         triangleVertex1.append(triangle[0]-1)
         triangleVertex2.append(triangle[1]-1)
         triangleVertex3.append(triangle[2]-1)
@@ -509,6 +510,7 @@ def main(FRAGMENT_SHADER=""):
     triangleVertex1 = np.array(triangleVertex1,dtype=np.float32)
     triangleVertex2 = np.array(triangleVertex2,dtype=np.float32)
     triangleVertex3 = np.array(triangleVertex3,dtype=np.float32)
+
 
     PlayerVel = np.array([0.0,0.0,0.0],dtype=np.float32)
 
