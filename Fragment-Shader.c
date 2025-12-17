@@ -170,8 +170,8 @@ vec3 GetPortalRayOffset(vec3 point){
         vec4 OtherPortal = Portals[OtherPortalIndex[i]];
         //vec3 PortalOffset = portal.xyz - OtherPortal.xyz;
         vec3 PortalOffset = OtherPortal.xyz - portal.xyz;
-        
-            
+
+
             return PortalOffset;
 
 
@@ -267,7 +267,7 @@ vec3 calculateObjectNormal(vec3 point,float ID) {
     float value = 0.0;
 
     int closestIndex = 0;
-    
+
     float closestDistance = distance(point,ObjectsMeshes[closestIndex].xyz);
 
     closestDistance = 1000;
@@ -285,7 +285,7 @@ vec3 calculateObjectNormal(vec3 point,float ID) {
         if (dist > 0.0) {
             value += radius / dist;
         }
-        
+
     }
     }
 
@@ -331,7 +331,7 @@ vec3 RotateOnY(vec3 Point,float angle){
 
 float insideBox3D(vec3 v, vec3 bottomLeft, vec3 topRight) {
     vec3 s = step(bottomLeft, v) - step(topRight, v);
-    return s.x * s.y * s.z; 
+    return s.x * s.y * s.z;
 }
 
 vec3 getBoxNormal(vec3 p, vec3 boxCenter) {
@@ -358,7 +358,7 @@ void main() {
     //uv.x += perlinNoise(uv);
 
     vec3 ray_origin = camera_pos;
-    
+
     vec3 ray_dir = normalize(vec3(uv.x, uv.y, -1.0)); // Ray direction in view space
     //ray_dir.x += distance(randomGradient(uv+(1/time)),vec2(0,0));
     ray_dir = normalize(ray_dir);
@@ -374,6 +374,7 @@ void main() {
 
     float max_distance = 50.0;
     max_distance = 10.0;
+    //config.max_distance
     float step_size = 0.01;
     float traveled_distance = 0.0;
     vec3 current_pos = ray_origin;
@@ -422,14 +423,14 @@ void main() {
 
 
         if (current_pos.y < -2){
-            if (current_pos.y > -2.2){ 
+            if (current_pos.y > -2.2){
             hit=true;
             normal = vec3(0,1,0);
             vec3 I = (ray_dir/normalize(ray_dir));
             vec3 N = (normal/normalize(normal));
             ray_dir = vec3(ray_dir.x,-(ray_dir.y),ray_dir.z);
 
-            //if (current_pos.y > -2.2){ 
+            //if (current_pos.y > -2.2){
             bool onLines = false;
             if (mod(current_pos.x,1) > 0.9){
                 onLines = true;
@@ -437,7 +438,7 @@ void main() {
             }
             if (mod(current_pos.z,1) > 0.9){
                 onLines = true;
-                
+
 
             }
             if (onLines == true){
@@ -459,7 +460,7 @@ void main() {
 
         }
         int TriangleIntersectIndex = IntersectingTriangle(current_pos,max_distance);
-        
+
         if (TriangleIntersectIndex > -1){
             hit = true;
 
@@ -471,7 +472,7 @@ void main() {
                 light_color += vec3(light_colors[k])*max(dot(light_normal,normal),0.01);
                             //light_color = normal;
                         }
-            
+
             b = 0;
             break;
         }
@@ -481,7 +482,7 @@ void main() {
             //hit = true;
             //b = 1;
             //b = 0;
-            
+
             if (insidePortal == false){
             //ray_dir.x += distance(randomGradient(uv+(1/time)),vec2(0,0))*portal_distortion_multiplier;
             //portal_distortion_multiplier = -portal_distortion_multiplier;
@@ -533,17 +534,17 @@ void main() {
         }
         bool Collision = false;
         for (int i=0;i<ObjectCount;i++){
-            
+
             float CurrentObjectID = ObjectIDList[i];
             int CurrentObjectMetaballCount = 0;
             float TotalDistance = 0;
-            
+
             for (int j = 0;j < ObjectMeshCount;j++){
-                
+
                 if (ObjectID[j] == CurrentObjectID){
 
 
-                    
+
                     //for (int i = 0; i < metaballcount; i++) {
                     vec3 center = ObjectsMeshes[j].xyz;
                     float radius = ObjectsMeshes[j].w;
@@ -559,7 +560,7 @@ void main() {
                     float matte = isObjectMatte[j];
                     //return true;
                     hit = true;
-                    
+
                     normal = calculateObjectNormal(current_pos,CurrentObjectID);
                     vec3 I = (ray_dir/normalize(ray_dir));
                     vec3 N = (normal/normalize(normal));
@@ -599,7 +600,7 @@ void main() {
                 light_color = texture(texture3D,current_pos.xyz).xyz;
                 b = 0;
                 break;
-                
+
             }
         }
     }

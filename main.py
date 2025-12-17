@@ -475,9 +475,11 @@ def main(FRAGMENT_SHADER=""):
     voxel_count = len(voxel_data)
 
     voxel_data = []
-    for x in range(8):
-        for y in range(8):
-            voxel_data.append([x,terrainGen.noise_4d(x,y,0,0)-2.5,y])
+    for x in range(32):
+        for y in range(32):
+            height = terrainGen.noise_4d(x/4,y/4,0,0)*2
+            height = round(height)
+            voxel_data.append([x,height-2.5,y])
 
     voxel_data = np.array(voxel_data,dtype = np.float32)
     voxel_count = len(voxel_data)
@@ -735,6 +737,24 @@ def main(FRAGMENT_SHADER=""):
         Filtered_triangleVertex2 = np.array(Filtered_triangleVertex2,dtype = np.float32)
         Filtered_triangleVertex3 = np.array(Filtered_triangleVertex3,dtype = np.float32)
         Filtered_triangle_normals = np.array(Filtered_triangle_normals,dtype = np.float32)
+
+
+        culled_voxels = []
+
+        for voxel in voxel_data:
+            d1 = np.linalg.norm(np.array(voxel) - np.array(camera_pos))
+            f1 = np.dot(np.array(voxel) - np.array(camera_pos), cull_dir)
+            if f1 > -1 and d1 < 8:
+                culled_voxels.append(voxel)
+            """
+            x,y,z = voxel
+            dx,dy,dz = x-camera_pos[0], y-camera_pos[1],z-camera_pos[2]
+            if dz > 0:
+                culled_voxels.append(voxel)
+            """
+        voxel_count = len(culled_voxels)
+
+        culled_voxels = np.array(culled_voxels,dtype=np.float32)
             
         
 
@@ -786,8 +806,8 @@ def main(FRAGMENT_SHADER=""):
             #voxels_location
             #voxels_count_location
 
-            glUniform3fv(voxels_location, len(voxel_data), voxel_data.flatten())
-            glUniform1i(voxels_count_location, len(voxel_data))
+            glUniform3fv(voxels_location, len(culled_voxels), culled_voxels.flatten())
+            glUniform1i(voxels_count_location, len(culled_voxels))
 
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_3D, textureID)
