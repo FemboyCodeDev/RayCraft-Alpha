@@ -49,6 +49,10 @@ uniform vec3 triangleNormals[64];
 uniform int triangleCount;
 
 
+uniform vec3 voxelPositions[1024];
+uniform int voxelCount = 0;
+
+
 float dot2( in vec3 v ) { return dot(v,v); }
 float udTriangle( vec3 p, vec3 a, vec3 b, vec3 c )
 {
@@ -333,6 +337,7 @@ void main() {
     vec3 normal = vec3(0,1,0);
     vec3 color_filter = vec3(1,1,1);
     float portal_distortion_multiplier = 1;
+    bool collision = false;
     for (float t = 0.0; t < max_distance; t += step_size) {
         step_size = 0.01 + (t*0.01);
         current_pos += ray_dir * step_size;
@@ -347,6 +352,21 @@ void main() {
                 break;
             }
         }
+
+        for (int i = 0; i < voxelCount; i++) {
+
+
+            if (insideBox3D(current_pos,voxelPositions[i]-vec3(0.5,0.5,0.5),voxelPositions[i]+vec3(0.5,0.5,0.5))>0){
+                collision = true;
+                hit = true;
+            break;
+            }
+        }
+        if (collision == true){
+            break;
+        }
+
+
         if (current_pos.y < -2){
             if (current_pos.y > -2.2){ 
             hit=true;

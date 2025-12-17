@@ -461,7 +461,16 @@ def main(FRAGMENT_SHADER=""):
     triangle_normals_location = glGetUniformLocation(shader, "triangleNormals")
     triangle_count_location = glGetUniformLocation(shader, "triangleCount")
 
+    voxels_location = glGetUniformLocation(shader, "voxelPositions")
+    voxels_count_location = glGetUniformLocation(shader, "voxelCount")
+
     time_location = glGetUniformLocation(shader, "time")
+
+
+
+
+    voxel_data = np.array([[0,0,0]],dtype = np.float32)
+    voxel_count = len(voxel_data)
     
     camera_pos = np.array([0.0, 0.0, 0.0], dtype=np.float32)
     camera_dir = np.array([0.0, 0.0, -1.0], dtype=np.float32)
@@ -760,9 +769,15 @@ def main(FRAGMENT_SHADER=""):
             glUniform1iv(triangle_vertex_2_location, len(Filtered_triangleVertex2), Filtered_triangleVertex2.flatten())
             glUniform1iv(triangle_vertex_3_location, len(Filtered_triangleVertex3), Filtered_triangleVertex3.flatten())
 
-            
+
             glUniform3fv(triangle_normals_location, len(Filtered_triangle_normals),Filtered_triangle_normals.flatten())
-            
+
+
+            #voxels_location
+            #voxels_count_location
+
+            glUniform3fv(voxels_location, len(voxel_data), voxel_data.flatten())
+            glUniform1i(voxels_count_location, len(voxel_data))
 
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_3D, textureID)
