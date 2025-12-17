@@ -270,20 +270,11 @@ def main(FRAGMENT_SHADER=""):
 
 
     # Create a shader program
-    #shader = create_shader_program()
     shader = create_new_shader_program(VERTEX_SHADER,FRAGMENT_SHADER)
-
-    
     blur_shader = create_post_shader_program()
-
-
     ui_shader = create_new_shader_program(UI_Vertex,UI_Fragment)
-
-    
     comp_shader = create_new_shader_program(COMP_Vertex,COMP_Fragment)
-
     sky_shader = create_new_shader_program(SKY_Vertex,SKY_Fragment)
-
     pause_shader = create_new_shader_program(PAUSE_Vertex,PAUSE_Fragment)
 
     # Create FBO
@@ -314,9 +305,6 @@ def main(FRAGMENT_SHADER=""):
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
 
-
-
-
     # Create Sky FBO
     sky_buffer = glGenFramebuffers(1)
     glBindFramebuffer(GL_FRAMEBUFFER, sky_buffer)
@@ -332,12 +320,6 @@ def main(FRAGMENT_SHADER=""):
     # Attach the texture to the FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, sky_render_texture, 0)
-
-    # (Optional) Create a renderbuffer for depth if needed
-    #rbo = glGenRenderbuffers(1)
-    #glBindRenderbuffer(GL_RENDERBUFFER, rbo)
-    #glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT)
-    #glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)
 
     # Check for completeness
     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE:
@@ -361,12 +343,6 @@ def main(FRAGMENT_SHADER=""):
     # Attach the texture to the FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, pause_render_texture, 0)
-
-    # (Optional) Create a renderbuffer for depth if needed
-    #rbo = glGenRenderbuffers(1)
-    #glBindRenderbuffer(GL_RENDERBUFFER, rbo)
-    #glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT)
-    #glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)
 
     # Check for completeness
     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE:
@@ -393,11 +369,6 @@ def main(FRAGMENT_SHADER=""):
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, ui_render_texture, 0)
 
-    # (Optional) Create a renderbuffer for depth if needed
-    #rbo = glGenRenderbuffers(1)
-    #glBindRenderbuffer(GL_RENDERBUFFER, rbo)
-    #glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT)
-    #glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)
 
     # Check for completeness
     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE:
@@ -427,28 +398,12 @@ def main(FRAGMENT_SHADER=""):
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
     glEnableVertexAttribArray(0)
 
-    #glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * quad_vertices.itemsize, ctypes.c_void_p(3 * quad_vertices.itemsize))
-    #glEnableVertexAttribArray(1)
-
-    #texture = glGenTextures(1)
-    #Texdepth = 16
-    #Texwidth, Texheight = 16, 16
-    #data = np.random.rand(16, 16, 16, 3).astype(np.float32)  # Random RGB values
-
-    #print(data)
-
     
     try:
         textureID = load_3d_texture("images")
     except Exception as e:
         print(e)
         textureID = load_3d_texture("_internal/images")
-
-
-
-    #glBindTexture(GL_TEXTURE_3D, textureID)
-    #glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB32F, Texwidth, Texheight, Texdepth, 0, GL_RGB, GL_FLOAT, data)
-
 
 
 
@@ -594,26 +549,7 @@ def main(FRAGMENT_SHADER=""):
             [0.0, 0.0, -5.0, 1.0],  # Sphere 1: center (0,0,-5), radius 2
             [math.sin(math.radians(i)) * 10, 0.0, -5, 1.0],  # Sphere 2: center (2,0,-5), radius 1
         ], dtype=np.float32)
-
-        #ObjectMeshes = np.array([
-        #    [0.0, 0.0, -3.0, 1.0],  # Sphere 1: center (0,0,-5), radius 2
-        #    [math.sin(math.radians(i)) * 10, 0.0, -3, 1.0],  # Sphere 2: center (2,0,-5), radius 1
-        #    [0.0, 0.0, -2.0, 1.0],
-        #    [0.0, 2.0, -3.0, 1.0]
-        #], dtype=np.float32)
-        #ObjectIDS = np.array([0,0,1,2],dtype=np.float32)
-        #ObjectIDList = np.array([0,1,2], dtype=np.float32)
-        """
-        sphere_data = []
-        for x in range(1):
-            for y in range(-2,2):
-                sphere_data.append([0,0.0,y+-5,1.0])
-        sphere_data = np.array(sphere_data)
-        """
         pygame.event.set_grab(MouseGrabbed)
-        #if MouseGrabbed:
-            #pygame.mouse.set_pos((WINDOW_WIDTH/2,WINDOW_HEIGHT/2))
-        #print(MouseGrabbed)
         mouse_x, mouse_y = pygame.mouse.get_pos()
         key_mouse_dx,key_mouse_dy = 0,0
         arrows_pressed = [False,False,False,False]
@@ -638,18 +574,10 @@ def main(FRAGMENT_SHADER=""):
             if event.type == pygame.MOUSEMOTION:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_dx,mouse_dy = event.rel
-                #if MouseGrabbed:
-                 #   pygame.mouse.set_pos((WINDOW_WIDTH/2,WINDOW_HEIGHT/2))
         if MouseGrabbed:
             pygame.mouse.set_pos((WINDOW_WIDTH/2,WINDOW_HEIGHT/2))
-        #pygame.mouse.set_pos((0,0))
-        # Get mouse movement
-        
-        #print(mouse_x,mouse_y)
         if MouseGrabbed:
             pass
-            #mouse_x = mouse_x - WINDOW_WIDTH/2
-            #mouse_dy = mouse_y - WINDOW_HEIGHT/2
         else:
             mouse_dx = mouse_x - last_mouse_x
             mouse_dy = mouse_y - last_mouse_y
@@ -660,22 +588,16 @@ def main(FRAGMENT_SHADER=""):
 
         # Update yaw and pitch
         mouse_dy += key_mouse_dy
-        #print(key_mouse_dy)
         yaw += mouse_dx * sensitivity*-1
         pitch += mouse_dy * sensitivity
-
-        #print(camera_dir)
 
         # Apply the camera rotation
         camera_dir = np.array([pitch, yaw, 0], dtype=np.float32)
 
         # Movement controls
         keys = pygame.key.get_pressed()
-        #print(yaw)
-        #print(keys[])
         accel_dir = ([0.0,0.0,0.0])
         if keys[K_w]:
-            #camera_pos += camera_dir * 0.1
             if EnablePhysics:
                 accel_dir[2]+= -math.sin(yaw)*0.1
                 accel_dir[0] += math.cos(yaw)*0.1
@@ -687,13 +609,10 @@ def main(FRAGMENT_SHADER=""):
                 accel_dir[2]+= -math.sin(yaw)*-0.1
                 accel_dir[0]+= math.cos(yaw)*-0.1
             else:
-                #camera_pos -= camera_dir * 0.1
                 camera_pos[2]+= -math.sin(yaw)*-0.1
                 camera_pos[0]+= math.cos(yaw)*-0.1
-            #camera_pos[2]-= 0.1
         if keys[K_a]:
             if EnablePhysics:
-            #camera_pos[0] -= 0.1
                 accel_dir[2]+= -math.sin(yaw+math.radians(90))*0.1
                 accel_dir[0]+= math.cos(yaw+math.radians(90))*0.1
             else:
@@ -722,45 +641,27 @@ def main(FRAGMENT_SHADER=""):
             yaw -= 0.1
         camera_pos = camera_pos[:3]
         camera_dir = camera_dir[:3]
-
-
         if EnablePhysics:
-
             onGround = camera_pos[1]-1 <= -2
-            #print(onGround)
             if onGround:
                 speed = np.linalg.norm(PlayerVel)
                 friction = 10
                 if speed != 0:
                     drop = speed*friction*DeltaTime
                     PlayerVel *= max(speed-drop,0)/speed
-
-
-            
             max_velocity = 1000
-
             accelerate = 300
-
             accel_dir = np.array(accel_dir,dtype=np.float32)
-
-
-
             projVel = np.dot(PlayerVel,accel_dir)
             accelVel = accelerate*DeltaTime
             if projVel+accelVel > max_velocity:
                 accelVel = max_velocity-projVel
             PlayerVel += accel_dir*accelVel
-
-
             PlayerVel[1] += gravity_strength*DeltaTime
-            #camera_pos[1] += PlayerVel[1]*DeltaTime
-
             camera_pos[1] -=1
-
             if SPE.PointIsColliding(camera_pos+PlayerVel*DeltaTime):
                 velocityLength = math.sqrt(sum((PlayerVel*DeltaTime)**2))
                 if velocityLength > 0:
-                    
                     velocitySegments = int(velocityLength)
                     velocityParts = (PlayerVel*DeltaTime)/velocitySegments
                     for vPart in range(velocitySegments):
@@ -770,29 +671,18 @@ def main(FRAGMENT_SHADER=""):
                 print("Collision")
             else:
                 camera_pos += PlayerVel*DeltaTime
-
             camera_pos[1] += 1
-            #print(projVel)
-
-            
             if camera_pos[1]-1 < -2:
                 camera_pos[1] = -1
                 if PlayerVel[1] < 0:
                     PlayerVel[1] = 0
-
-
         Filtered_triangleVertex1 = []
         Filtered_triangleVertex2 = []
         Filtered_triangleVertex3 = []
         Filtered_triangle_normals = []
-
-        #camera_pos[2]+= -math.sin(yaw)*0.1
-        #camera_pos[0]+= math.cos(yaw)*0.1
-
         cull_dir = np.array([math.cos(yaw),0,-math.sin(yaw)])
         Used_Triangle_Vertexes = [False for _ in range(len(triangleVertexes))]
         for tvi1,tvi2,tvi3,triNormal in zip(triangleVertex1,triangleVertex2,triangleVertex3,triangleNormals):
-            #print(tvi1)
             tv1 = triangleVertexes[int(tvi1)]
             tv2 = triangleVertexes[int(tvi2)]
             tv3 = triangleVertexes[int(tvi3)]
@@ -815,18 +705,6 @@ def main(FRAGMENT_SHADER=""):
         Filtered_triangleVertex2 = np.array(Filtered_triangleVertex2,dtype = np.float32)
         Filtered_triangleVertex3 = np.array(Filtered_triangleVertex3,dtype = np.float32)
         Filtered_triangle_normals = np.array(Filtered_triangle_normals,dtype = np.float32)
-
-        """
-
-        filtered_triangleVertexes = []
-
-        for triangleVertex,used in zip(triangleVertexes,Used_Triangle_Vertexes):
-            if used:
-                filtered_triangleVertexes.append(triangleVertex)
-        filtered_triangleVertexes = np.array(filtered_triangleVertexes,dtype = np.float32)
-        """
-
-        #print(len(triangleVertexes))
             
         
 
@@ -841,13 +719,9 @@ def main(FRAGMENT_SHADER=""):
 
         
 
-        #print(sphere_data)
         glUniform1f(time_location, time.time())
         try:
-            #print(*camera_pos)
-            #print("glUniform3f(camera_pos_location, *camera_pos)")
             glUniform3f(camera_pos_location, *camera_pos)
-            #print("glUniform3f(camera_dir_location, *camera_dir)")
             glUniform3f(camera_dir_location, *camera_dir)
             glUniform1i(metaball_count_location, len(sphere_data))
             glUniform1i(lights_amount_location, len(light_positions))
@@ -868,20 +742,13 @@ def main(FRAGMENT_SHADER=""):
             glUniform1i(object_mesh_count_location, len(ObjectIDS))
 
             triangle_points_location
-            #filtered_triangleVertexes
             glUniform3fv(triangle_points_location, len(triangleVertexes),triangleVertexes.flatten())
-            #glUniform3fv(triangle_points_location, len(filtered_triangleVertexes),filtered_triangleVertexes.flatten())
-            #glUniform1i(triangle_count_location, len(triangleVertex1))
-            #glUniform1iv(triangle_vertex_1_location, len(triangleVertex1), triangleVertex1.flatten())
-            #glUniform1iv(triangle_vertex_2_location, len(triangleVertex2), triangleVertex2.flatten())
-            #glUniform1iv(triangle_vertex_3_location, len(triangleVertex3), triangleVertex3.flatten())
             glUniform1i(triangle_count_location, len(Filtered_triangleVertex1))
             glUniform1iv(triangle_vertex_1_location, len(Filtered_triangleVertex1), Filtered_triangleVertex1.flatten())
             glUniform1iv(triangle_vertex_2_location, len(Filtered_triangleVertex2), Filtered_triangleVertex2.flatten())
             glUniform1iv(triangle_vertex_3_location, len(Filtered_triangleVertex3), Filtered_triangleVertex3.flatten())
             triangle_normals_location
             #Filtered_triangle_normals
-            #glUniform3fv(triangle_normals_location, len(triangleNormals),triangleNormals.flatten())
             glUniform3fv(triangle_normals_location, len(Filtered_triangle_normals),Filtered_triangle_normals.flatten())
             
 
@@ -895,11 +762,8 @@ def main(FRAGMENT_SHADER=""):
         glBindVertexArray(VAO)
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
 
-        
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
-
-
 
         #Sky Code
         #"""
@@ -934,8 +798,6 @@ def main(FRAGMENT_SHADER=""):
 
         glUniform1i(glGetUniformLocation(pause_shader, "Enabled"), escape_menu)
 
-        #glUniform3f(glGetUniformLocation(sky_shader, "camera_dir"), *camera_dir)
-
 
         glBindVertexArray(VAO)
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
@@ -944,7 +806,7 @@ def main(FRAGMENT_SHADER=""):
 
         #UI code
 
-        
+
         
         glClear(GL_COLOR_BUFFER_BIT)
         glBindFramebuffer(GL_FRAMEBUFFER, ui_buffer)
@@ -956,8 +818,6 @@ def main(FRAGMENT_SHADER=""):
             
         glUniform1i(glGetUniformLocation(ui_shader, "screenTexture"), 0)
 
-
-
         glBindVertexArray(VAO)
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
 
@@ -967,57 +827,37 @@ def main(FRAGMENT_SHADER=""):
 
 
 
-
-        
-
-
         #glBindFramebuffer(GL_FRAMEBUFFER, 1)
 
         if enable_POST:
-            #"""
-            #glBindFramebuffer(GL_FRAMEBUFFER, fbo)
             
             glClear(GL_COLOR_BUFFER_BIT)
             glBindFramebuffer(GL_FRAMEBUFFER, fbo)
             ##Post Start
 
-            
-
             glUseProgram(blur_shader)
-            
 
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_2D, render_texture)
             
             glUniform1i(glGetUniformLocation(blur_shader, "screenTexture"), 0)
 
-
-
             glBindVertexArray(VAO)
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
-
         
             glBindFramebuffer(GL_FRAMEBUFFER, 0)
             
             #"""
             ##Post Enmd
-        #print(enable_COMP)
         if enable_COMP:
-
-            
-            #glBindFramebuffer(GL_FRAMEBUFFER, fbo)
             
             glClear(GL_COLOR_BUFFER_BIT)
 
             ##Post Start
 
-            
-
             glUseProgram(comp_shader)
 
             glUniform1i(glGetUniformLocation(comp_shader, "screenTexture"), 0)
-            #
-    
 
             glUniform1i(glGetUniformLocation(comp_shader, "uiTexture"), 1)
             glUniform1i(glGetUniformLocation(comp_shader, "skyTexture"), 2)
@@ -1032,10 +872,6 @@ def main(FRAGMENT_SHADER=""):
             glBindTexture(GL_TEXTURE_2D, sky_render_texture)
             glActiveTexture(GL_TEXTURE0+3)
             glBindTexture(GL_TEXTURE_2D, pause_render_texture)
-            
-            
-            
-            
         
         # Draw the fullscreen quad
         glBindVertexArray(VAO)
