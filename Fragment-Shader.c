@@ -12,48 +12,6 @@ out vec4 normalColor;
 
 
 
-// Function to create a pseudo-random gradient vector
-vec2 randomGradient(vec2 coord) {
-    float random = fract(sin(dot(coord, vec2(127.1, 311.7))) * 43758.5453);
-    float angle = random * 2.0 * 3.14159265359; // Random angle in radians
-    return vec2(cos(angle), sin(angle));
-}
-
-// Fade function for smoothing
-float fade(float t) {
-    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-}
-
-// Linear interpolation
-float lerp(float a, float b, float t) {
-    return a + t * (b - a);
-}
-
-// Perlin noise function
-float perlinNoise(vec2 uv) {
-    // Grid cell coordinates
-    vec2 p0 = floor(uv);
-    vec2 p1 = p0 + vec2(1.0, 0.0);
-    vec2 p2 = p0 + vec2(0.0, 1.0);
-    vec2 p3 = p0 + vec2(1.0, 1.0);
-
-    // Local coordinates within the cell
-    vec2 local = fract(uv);
-
-    // Fade curves for interpolation
-    vec2 fadeVals = vec2(fade(local.x), fade(local.y));
-
-    // Compute dot products between gradient vectors and local position vectors
-    float d0 = dot(randomGradient(p0), local - vec2(0.0, 0.0));
-    float d1 = dot(randomGradient(p1), local - vec2(1.0, 0.0));
-    float d2 = dot(randomGradient(p2), local - vec2(0.0, 1.0));
-    float d3 = dot(randomGradient(p3), local - vec2(1.0, 1.0));
-
-    // Interpolate the results along x and y axes
-    float xInterp1 = lerp(d0, d1, fadeVals.x);
-    float xInterp2 = lerp(d2, d3, fadeVals.x);
-    return lerp(xInterp1, xInterp2, fadeVals.y);
-}
 
 
 uniform vec2 resolution;
@@ -132,16 +90,7 @@ int IntersectingTriangle(vec3 p,float max_distance)
     return -1;
 
 }
-
-
-
-
-
 bool isObjectAt(vec3 point) {
-    //if (point.y < -2){
-    //    return true;
-
-    //}
     float TotalDistance = 0;
     for (int i = 0; i < metaballcount; i++) {
         vec3 center = metaballs[i].xyz;
@@ -157,7 +106,6 @@ bool isObjectAt(vec3 point) {
     }
     }
     return false;
-    
 }
 
 
@@ -170,16 +118,10 @@ bool CollidingWithPortal(vec3 point){
             return false;
         }
 
-        //if ((center-point).z < -0.1){
-        //    return false;
-       // }
-        //return true;
         if (distance(point, center) <= radius){
         if (distance(point, center) <= radius-0.2){
             return false;
         }
-        //vec4 OtherPortal = Portals[OtherPortalIndex[i]];
-        //vec3 PortalOffset = portal.xyz - OtherPortal.xyz;
             return true;
         }
     }
@@ -201,8 +143,6 @@ bool CollidingWithPortalFrame(vec3 point){
         if (distance(point, center) <= radius-0.2){
             return false;
         }
-        //vec4 OtherPortal = Portals[OtherPortalIndex[i]];
-        //vec3 PortalOffset = portal.xyz - OtherPortal.xyz;
             return true;
         }
     }
@@ -432,11 +372,6 @@ void main() {
             break;
             }
             }
-            //ray_dir = I - 2 * dot(I,N) * N;
-            //b = 0;
-            //b = 0;
-            //break;
-
 
         }
 
@@ -453,8 +388,7 @@ void main() {
         
         if (TriangleIntersectIndex > -1){
             hit = true;
-            //light_color = vec3(255,154,0)/255;
-            //light_color *= dot(triangleNormals[TriangleIntersectIndex],normalize(vec3(1,1,1)));
+
             vec3 normal = triangleNormals[TriangleIntersectIndex];
             for (int k = 0; k < light_count; k++) {
                 vec3 light_position = light_positions[k];
@@ -556,15 +490,7 @@ void main() {
                     vec3 I = (ray_dir/normalize(ray_dir));
                     vec3 N = (normal/normalize(normal));
                     if (matte<0.5){
-                    
-                    
-                    
-                    //ray_dir = I - 2 * dot(I,N) * N;
-                    ray_dir = -normal;
-                    //light_color = vec3(1,0,0);
-                    //light_color = abs(normal);
-                    //b = 0;
-                    //b = 0;
+                        ray_dir = -normal;
                     }else {
                         Collision = true;
                         for (int k = 0; k < light_count; k++) {
@@ -577,11 +503,9 @@ void main() {
                     break;
 
                     }
-                    
                     break;
-
                     }
-                     //}
+
             }
         if (Collision == true){
             break;
@@ -594,12 +518,8 @@ void main() {
 
         }
         if (insideBox3D(current_pos,vec3(0,0,0),vec3(1,1,1))>0){
-            //
-            //light_color = current_pos;
-            //color_filter *= normalize(texture(texture3D,current_pos.xyz).rgb+vec3(1,1,1));
             if (texture(texture3D,current_pos.xyz).xyz == vec3(0,0,0)){
-                
-                //color_filter = vec3(1,1,1);
+
             }else{
                 hit = true;
                 light_color = texture(texture3D,current_pos.xyz).xyz;
@@ -607,32 +527,16 @@ void main() {
                 break;
                 
             }
-            
-            //b=0;
-            //break;
-
-
         }
     }
 
     if (hit) {
         b = 1-b;
-        if (b > 0){
-            //b = b*2;
-
-        }
         fragColor = vec4(b*light_color*color_filter, 1.0); // Red for hit
         hdrColor = vec4(b*light_color*color_filter*0.1, 1.0);
-        //hdrColor  = vec4(1, 0.0, 0.0, 1.0); // Red for hit
-        //fragColor = vec4(abs(ray_dir),1.0);
+
     } else {
-        vec2 Noisepos = -vec2(camera_dir.y,camera_dir.x);
-        //float noiseValue = perlinNoise(Noisepos+uv);
-        float noiseValue = perlinNoise(uv);
-        fragColor = vec4(0.0, 0.0, 1.0, 1.0); // Blue for miss
-        fragColor = vec4(vec3(noiseValue * 0.5 + 0.5), 1.0);
 
         fragColor = vec4(0,0,0,0);
     }
-    normalColor = vec4(abs(ray_dir),1.0);
 }
