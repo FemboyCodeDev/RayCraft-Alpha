@@ -5,8 +5,12 @@
 #ifdef GL_ES
 precision mediump float;
 #endif
-out vec4 fragColor;
+//out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec4 hdrColor;
 out vec4 normalColor;
+
+
 
 // Function to create a pseudo-random gradient vector
 vec2 randomGradient(vec2 coord) {
@@ -618,7 +622,8 @@ void main() {
 
         }
         fragColor = vec4(b*light_color*color_filter, 1.0); // Red for hit
-        //fragColor = vec4(1, 0.0, 0.0, 1.0); // Red for hit
+        hdrColor = vec4(b*light_color*color_filter*0.1, 1.0);
+        //hdrColor  = vec4(1, 0.0, 0.0, 1.0); // Red for hit
         //fragColor = vec4(abs(ray_dir),1.0);
     } else {
         vec2 Noisepos = -vec2(camera_dir.y,camera_dir.x);

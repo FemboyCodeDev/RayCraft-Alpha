@@ -281,8 +281,11 @@ def main(FRAGMENT_SHADER=""):
     fbo = glGenFramebuffers(1)
     glBindFramebuffer(GL_FRAMEBUFFER, fbo)
 
+
     # Create texture to render to
     render_texture = glGenTextures(1)
+
+
     glBindTexture(GL_TEXTURE_2D, render_texture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WINDOW_WIDTH, WINDOW_HEIGHT, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, None)
@@ -292,6 +295,23 @@ def main(FRAGMENT_SHADER=""):
     # Attach the texture to the FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, render_texture, 0)
+
+
+
+    # Create texture to render to
+    render_texture_hdr = glGenTextures(1)
+
+
+    glBindTexture(GL_TEXTURE_2D, render_texture_hdr)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WINDOW_WIDTH, WINDOW_HEIGHT, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, None)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+    # Attach the texture to the FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+1,
+                           GL_TEXTURE_2D, render_texture_hdr, 0)
+
 
     # (Optional) Create a renderbuffer for depth if needed
     rbo = glGenRenderbuffers(1)
@@ -702,6 +722,7 @@ def main(FRAGMENT_SHADER=""):
 
         # First pass: render scene to FBO
         glBindFramebuffer(GL_FRAMEBUFFER, fbo)
+        glDrawBuffers(2, [GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1])
         glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -858,10 +879,12 @@ def main(FRAGMENT_SHADER=""):
             glActiveTexture(GL_TEXTURE0+0)
             glBindTexture(GL_TEXTURE_2D, render_texture)
             glActiveTexture(GL_TEXTURE0+1)
-            glBindTexture(GL_TEXTURE_2D, ui_render_texture)
+            glBindTexture(GL_TEXTURE_2D, render_texture_hdr)
             glActiveTexture(GL_TEXTURE0+2)
-            glBindTexture(GL_TEXTURE_2D, sky_render_texture)
+            glBindTexture(GL_TEXTURE_2D, ui_render_texture)
             glActiveTexture(GL_TEXTURE0+3)
+            glBindTexture(GL_TEXTURE_2D, sky_render_texture)
+            glActiveTexture(GL_TEXTURE0+4)
             glBindTexture(GL_TEXTURE_2D, pause_render_texture)
         
         # Draw the fullscreen quad
