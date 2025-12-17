@@ -184,6 +184,36 @@ vec3 GetPortalRayOffset(vec3 point){
 
 }
 
+vec3 getBoxUV(vec3 p, vec3 boxCenter, vec3 boxSize) {
+    // Get position relative to the center of the box
+    vec3 localPos = p - boxCenter;
+
+    // Normalize position relative to the box half-extents (0.5 for a unit cube)
+    vec3 halfSize = boxSize * 0.5;
+    vec3 d = localPos / halfSize;
+    vec3 absD = abs(d);
+
+    vec2 uv;
+    float faceIndex;
+
+    // Determine which face was hit based on the largest component
+    if (absD.x > absD.y && absD.x > absD.z) {
+        // Hitting X faces (Left/Right)
+        uv = (localPos.zy / boxSize.zy) + 0.5;
+        faceIndex = d.x > 0.0 ? 0.0 : 1.0;
+    } else if (absD.y > absD.x && absD.y > absD.z) {
+        // Hitting Y faces (Top/Bottom)
+        uv = (localPos.xz / boxSize.xz) + 0.5;
+        faceIndex = d.y > 0.0 ? 2.0 : 3.0;
+    } else {
+        // Hitting Z faces (Front/Back)
+        uv = (localPos.xy / boxSize.xy) + 0.5;
+        faceIndex = d.z > 0.0 ? 4.0 : 5.0;
+    }
+
+    return vec3(uv, faceIndex);
+}
+
 
 
 vec3 calculateNormal(vec3 point) {
@@ -304,6 +334,23 @@ float insideBox3D(vec3 v, vec3 bottomLeft, vec3 topRight) {
     return s.x * s.y * s.z; 
 }
 
+vec3 getBoxNormal(vec3 p, vec3 boxCenter) {
+    // Get the vector from the center of the box to the hit point
+    vec3 localPos = p - boxCenter;
+
+    // We look for which axis has the largest magnitude.
+    // That's the face we are currently touching!
+    vec3 absP = abs(localPos);
+
+    if (absP.x > absP.y && absP.x > absP.z) {
+        return vec3(sign(localPos.x), 0.0, 0.0);
+    } else if (absP.y > absP.x && absP.y > absP.z) {
+        return vec3(0.0, sign(localPos.y), 0.0);
+    } else {
+        return vec3(0.0, 0.0, sign(localPos.z));
+    }
+}
+
 void main() {
     vec2 uv = gl_FragCoord.xy / resolution * 2.0 - 1.0;
     uv.y *= resolution.y / resolution.x;
@@ -359,6 +406,13 @@ void main() {
             if (insideBox3D(current_pos,voxelPositions[i]-vec3(0.5,0.5,0.5),voxelPositions[i]+vec3(0.5,0.5,0.5))>0){
                 collision = true;
                 hit = true;
+                vec2 boxUV = getBoxUV(current_pos,voxelPositions[i],vec3(1,1,1)).xy;
+                light_color = vec3(boxUV,0.0);
+                b = b*0.1;
+                b = 1;
+
+                //getBoxNormal(current_pos,voxelPositions);
+
             break;
             }
         }
