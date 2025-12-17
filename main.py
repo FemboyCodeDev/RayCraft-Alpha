@@ -753,14 +753,14 @@ def main(FRAGMENT_SHADER=""):
             glUniform1i(object_count_location, len(ObjectIDList))
             glUniform1i(object_mesh_count_location, len(ObjectIDS))
 
-            triangle_points_location
+
             glUniform3fv(triangle_points_location, len(triangleVertexes),triangleVertexes.flatten())
             glUniform1i(triangle_count_location, len(Filtered_triangleVertex1))
             glUniform1iv(triangle_vertex_1_location, len(Filtered_triangleVertex1), Filtered_triangleVertex1.flatten())
             glUniform1iv(triangle_vertex_2_location, len(Filtered_triangleVertex2), Filtered_triangleVertex2.flatten())
             glUniform1iv(triangle_vertex_3_location, len(Filtered_triangleVertex3), Filtered_triangleVertex3.flatten())
-            triangle_normals_location
-            #Filtered_triangle_normals
+
+            
             glUniform3fv(triangle_normals_location, len(Filtered_triangle_normals),Filtered_triangle_normals.flatten())
             
 
