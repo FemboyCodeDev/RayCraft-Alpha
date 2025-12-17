@@ -9,6 +9,8 @@ import time
 import os
 import obj
 
+import terrainGen
+
 from spiffmodel import SpiffModel
 
 import spiffPhysicsEngine as SPE
@@ -470,6 +472,14 @@ def main(FRAGMENT_SHADER=""):
 
 
     voxel_data = np.array([[0,0-2.5,0]],dtype = np.float32)
+    voxel_count = len(voxel_data)
+
+    voxel_data = []
+    for x in range(8):
+        for y in range(8):
+            voxel_data.append([x,terrainGen.noise_4d(x,y,0,0)-2.5,y])
+
+    voxel_data = np.array(voxel_data,dtype = np.float32)
     voxel_count = len(voxel_data)
     
     camera_pos = np.array([0.0, 0.0, 0.0], dtype=np.float32)
