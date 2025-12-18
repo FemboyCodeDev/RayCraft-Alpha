@@ -475,8 +475,12 @@ def main(FRAGMENT_SHADER=""):
     voxel_count = len(voxel_data)
 
     voxel_data = []
-    for x in range(32):
-        for y in range(32):
+    chunkSizeX = 32
+    chunkSizeY = 32
+    chunkSizeX = 0
+    chunkSizeY = 0
+    for x in range(chunkSizeX):
+        for y in range(chunkSizeY):
             height = terrainGen.noise_4d(x/4,y/4,0,0)*2
             height = round(height)
             voxel_data.append([x,height-2.5,y])
@@ -754,6 +758,7 @@ def main(FRAGMENT_SHADER=""):
                 culled_voxels.append(voxel)
             """
         voxel_count = len(culled_voxels)
+        voxel_count = 0
 
         culled_voxels = np.array(culled_voxels,dtype=np.float32)
             
