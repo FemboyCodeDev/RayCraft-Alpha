@@ -536,6 +536,7 @@ def main(FRAGMENT_SHADER=""):
 
 
     objModelData = obj.load_obj("doommap.obj")
+    objModelData = {"vertices":[],"faces":[],"faceNormals":[]}
     print(objModelData["vertices"])
     triangleVertexes = np.array(objModelData["vertices"],dtype=np.float32)
     triangleNormals = np.array(objModelData["faceNormals"],dtype=np.float32)
