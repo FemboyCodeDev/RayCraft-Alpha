@@ -29,6 +29,7 @@ WINDOW_HEIGHT = 300
 VERTEX_SHADER = """
 #version 330 core
 layout(location = 0) in vec3 position;
+
 void main() {
     gl_Position = vec4(position, 1.0);
 }
@@ -465,6 +466,8 @@ def main(FRAGMENT_SHADER=""):
 
     voxels_location = glGetUniformLocation(shader, "voxelPositions")
     voxels_count_location = glGetUniformLocation(shader, "voxelCount")
+
+    voxel_texture_location = glGetUniformLocation(shader, "voxelTexture")
 
     time_location = glGetUniformLocation(shader, "time")
 

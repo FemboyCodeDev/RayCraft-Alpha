@@ -6,6 +6,7 @@
 precision mediump float;
 #endif
 //out vec4 fragColor;
+in vec2 TexCoords;
 layout (location = 0) out vec4 fragColor;
 layout (location = 1) out vec4 hdrColor;
 out vec4 normalColor;
@@ -51,6 +52,8 @@ uniform int triangleCount;
 
 uniform vec3 voxelPositions[1024];
 uniform int voxelCount = 0;
+
+uniform sampler2D voxelTexture;
 
 
 float dot2( in vec3 v ) { return dot(v,v); }
@@ -659,4 +662,6 @@ void main() {
 
         fragColor = vec4(0,0,0,0);
     }
+
+    fragColor = texture(voxelTexture, gl_FragCoord.xy / resolution);
 }
