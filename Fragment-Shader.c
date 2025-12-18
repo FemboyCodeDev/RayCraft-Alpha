@@ -351,6 +351,24 @@ vec3 getBoxNormal(vec3 p, vec3 boxCenter) {
     }
 }
 
+float updateMinDistance(float value, float minDistance){
+
+
+if (minDistance<0){
+minDistance = value;
+}
+if (minDistance>value){
+minDistance = value;
+
+}
+return minDistance;
+}
+
+ float distanceToCube(vec3 p, vec3 center, vec3 size) {
+     vec3 d = abs(p - center) - size;
+     return length(max(d, 0.0)) + min(max(d.x, max(d.y, d.z)), 0.0);
+ }
+
 void main() {
     vec2 uv = gl_FragCoord.xy / resolution * 2.0 - 1.0;
     uv.y *= resolution.y / resolution.x;
@@ -376,6 +394,8 @@ void main() {
     max_distance = 10.0;
     //config.max_distance
     float step_size = 0.01;
+    float min_step_size = 1.0 ;
+    min_step_size = 0.01;
     step_size = 0.5;
     float traveled_distance = 0.0;
     vec3 current_pos = ray_origin;
@@ -388,12 +408,33 @@ void main() {
     float portal_distortion_multiplier = 1;
     bool collision = false;
 
+
+    float minDistance = -1;
+
+    minDistance=updateMinDistance(abs(current_pos.y-2) , minDistance);
+
     for (float t = 0.0; t < max_distance; t += step_size) {
         step_size = 0.01 + (t*0.01);
+        if ((minDistance < min_step_size)){
+        step_size = min_step_size;
+        }else{
+        step_size = minDistance;
+        }
+        if (step_size > 1.0){
+        step_size = 1.0;
+        }
+        step_size = step_size*0.5;
         current_pos += ray_dir * step_size;
         b += 1/(max_distance+step_size);
+
+
+        minDistance = -1;
         for (int i = 0; i < light_count; i++) {
             vec3 light_position = light_positions[i];
+
+            minDistance=updateMinDistance(distance(light_position,current_pos)-1 , minDistance);
+
+
             if (distance(light_position,current_pos) < 1){
                 hit = true;
                 b = b*0.1;
@@ -414,9 +455,18 @@ void main() {
                 b = b*0.1;
                 b = 0;
 
-                //getBoxNormal(current_pos,voxelPositions);
 
-            break;
+
+                //getBoxNormal(current_pos,voxelPositions);
+                break;
+            }else{
+            vec3 relativePositionToVoxel = voxelPositions[i]-current_pos;
+            float distanceToVoxel = abs(relativePositionToVoxel.x)+abs(relativePositionToVoxel.y)+abs(relativePositionToVoxel.z);
+
+            distanceToVoxel = distanceToCube(current_pos,voxelPositions[i],vec3(1,1,1));
+            minDistance=updateMinDistance(abs(distanceToVoxel) , minDistance);
+
+
             }
         }
         if (collision == true){
