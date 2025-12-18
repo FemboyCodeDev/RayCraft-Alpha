@@ -376,6 +376,7 @@ void main() {
     max_distance = 10.0;
     //config.max_distance
     float step_size = 0.01;
+    step_size = 0.5;
     float traveled_distance = 0.0;
     vec3 current_pos = ray_origin;
     bool hit = false;

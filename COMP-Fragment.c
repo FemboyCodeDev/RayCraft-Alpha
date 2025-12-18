@@ -26,6 +26,8 @@ void main()
 
     int blurSizeX = 8;
     int blurSizeY = 8;
+    blurSizeX = 1;
+    blurSizeY = 1;
     vec4 total_hdr_bloom = vec4(0,0,0,0.0);
     for (float x=-blurSizeX; x<=blurSizeX; x++){
         for(float y=-blurSizeY; y<=blurSizeY;y++){
